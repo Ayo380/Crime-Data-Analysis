@@ -1,0 +1,38 @@
+{
+	"name": "Parquet1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "crimelakelinkerservice",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "crimedata",
+				"fileSystem": "gold"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "case_number",
+				"type": "UTF8"
+			},
+			{
+				"name": "IUCR",
+				"type": "UTF8"
+			},
+			{
+				"name": "iucr_primary_type",
+				"type": "UTF8"
+			},
+			{
+				"name": "iucr_description",
+				"type": "UTF8"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,22 @@
+{
+	"name": "chicagodatafile",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "crimelakelinkerservice",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "crime",
+				"folderPath": "crimeID",
+				"fileSystem": "crimelake"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

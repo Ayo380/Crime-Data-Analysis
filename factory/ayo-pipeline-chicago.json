@@ -1,0 +1,14 @@
+{
+	"name": "ayo-pipeline-chicago",
+	"properties": {
+		"globalConfigurations": {
+			"PipelineBillingEnabled": "false"
+		}
+	},
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "91661e6e-7a81-4062-a7ae-b4a5ab7aa5a1",
+		"tenantId": "26f3b288-e32a-4093-b7ee-6c9c5d542d4f"
+	}
+}

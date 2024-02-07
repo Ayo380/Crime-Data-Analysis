@@ -1,0 +1,279 @@
+{
+	"name": "Chicago_crime",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"httpRequestTimeout": "00:01:40",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "GET",
+						"paginationRules": {
+							"supportRFC5988": "true"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "$['id']"
+								},
+								"sink": {
+									"name": "id",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['case_number']"
+								},
+								"sink": {
+									"name": "case_number",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['block']"
+								},
+								"sink": {
+									"name": "block",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['iucr']"
+								},
+								"sink": {
+									"name": "iucr",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['primary_type']"
+								},
+								"sink": {
+									"name": "iucr_primary_type",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['description']"
+								},
+								"sink": {
+									"name": "iucr_description",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['location_description']"
+								},
+								"sink": {
+									"name": "location_description",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['arrest']"
+								},
+								"sink": {
+									"name": "arrest",
+									"type": "Boolean"
+								}
+							},
+							{
+								"source": {
+									"path": "$['domestic']"
+								},
+								"sink": {
+									"name": "domestic",
+									"type": "Boolean"
+								}
+							},
+							{
+								"source": {
+									"path": "$['beat']"
+								},
+								"sink": {
+									"name": "beat",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['district']"
+								},
+								"sink": {
+									"name": "district",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['ward']"
+								},
+								"sink": {
+									"name": "ward",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['community_area']"
+								},
+								"sink": {
+									"name": "community_area",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['year']"
+								},
+								"sink": {
+									"name": "year",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['updated_on']"
+								},
+								"sink": {
+									"name": "updated_on",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['date']"
+								},
+								"sink": {
+									"name": "date_time",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['latitude']"
+								},
+								"sink": {
+									"name": "latitude",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['longitude']"
+								},
+								"sink": {
+									"name": "longitude",
+									"type": "String"
+								}
+							}
+						],
+						"collectionReference": "",
+						"mapComplexValuesToString": true
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "chicagoAPi",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "chicagodatafile",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Bronze to Silver",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Copy data1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Repos/olugboyoayokunle@gmail.com/Crime-Data-Analysis/Transformation-Script/crimedata to silver"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks1",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Silver to Gold",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Bronze to Silver",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Repos/olugboyoayokunle@gmail.com/Crime-Data-Analysis/Transformation-Script/silver to gold"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks1",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2024-01-26T06:13:22Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
