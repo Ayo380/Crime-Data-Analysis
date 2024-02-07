@@ -1,0 +1,462 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "ayo-pipeline-chicago"
+		},
+		"AzureDatabricks1_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'AzureDatabricks1'"
+		},
+		"crimelakelinkerservice_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'crimelakelinkerservice'"
+		},
+		"AzureDatabricks1_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "0124-053339-wjtem31k"
+		},
+		"chicagolinkerservice_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://data.cityofchicago.org/resource/ijzp-q8t2.json"
+		},
+		"crimelakelinkerservice_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://crimelakegen2.dfs.core.windows.net/"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Chicago_crime')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "RestSource",
+								"httpRequestTimeout": "00:01:40",
+								"requestInterval": "00.00:00:00.010",
+								"requestMethod": "GET",
+								"paginationRules": {
+									"supportRFC5988": "true"
+								}
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"path": "$['id']"
+										},
+										"sink": {
+											"name": "id",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['case_number']"
+										},
+										"sink": {
+											"name": "case_number",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['block']"
+										},
+										"sink": {
+											"name": "block",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['iucr']"
+										},
+										"sink": {
+											"name": "iucr",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['primary_type']"
+										},
+										"sink": {
+											"name": "iucr_primary_type",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['description']"
+										},
+										"sink": {
+											"name": "iucr_description",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['location_description']"
+										},
+										"sink": {
+											"name": "location_description",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['arrest']"
+										},
+										"sink": {
+											"name": "arrest",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"path": "$['domestic']"
+										},
+										"sink": {
+											"name": "domestic",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"path": "$['beat']"
+										},
+										"sink": {
+											"name": "beat",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['district']"
+										},
+										"sink": {
+											"name": "district",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ward']"
+										},
+										"sink": {
+											"name": "ward",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['community_area']"
+										},
+										"sink": {
+											"name": "community_area",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['year']"
+										},
+										"sink": {
+											"name": "year",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['updated_on']"
+										},
+										"sink": {
+											"name": "updated_on",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['date']"
+										},
+										"sink": {
+											"name": "date_time",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['latitude']"
+										},
+										"sink": {
+											"name": "latitude",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['longitude']"
+										},
+										"sink": {
+											"name": "longitude",
+											"type": "String"
+										}
+									}
+								],
+								"collectionReference": "",
+								"mapComplexValuesToString": true
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "chicagoAPi",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "chicagodatafile",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Bronze to Silver",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "Copy data1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Repos/olugboyoayokunle@gmail.com/Crime-Data-Analysis/Transformation-Script/crimedata to silver"
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureDatabricks1",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Silver to Gold",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "Bronze to Silver",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Repos/olugboyoayokunle@gmail.com/Crime-Data-Analysis/Transformation-Script/silver to gold"
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureDatabricks1",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2024-01-26T06:13:22Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/chicagoAPi')]",
+				"[concat(variables('factoryId'), '/datasets/chicagodatafile')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureDatabricks1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Parquet1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "crimelakelinkerservice",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "crimedata",
+						"fileSystem": "gold"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "case_number",
+						"type": "UTF8"
+					},
+					{
+						"name": "IUCR",
+						"type": "UTF8"
+					},
+					{
+						"name": "iucr_primary_type",
+						"type": "UTF8"
+					},
+					{
+						"name": "iucr_description",
+						"type": "UTF8"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/crimelakelinkerservice')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/chicagoAPi')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "chicagolinkerservice",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "RestResource",
+				"typeProperties": {},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/chicagolinkerservice')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/chicagodatafile')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "crimelakelinkerservice",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "crime",
+						"folderPath": "crimeID",
+						"fileSystem": "crimelake"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/crimelakelinkerservice')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureDatabricks1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDatabricks",
+				"typeProperties": {
+					"domain": "https://adb-1021662226873230.10.azuredatabricks.net",
+					"accessToken": {
+						"type": "SecureString",
+						"value": "[parameters('AzureDatabricks1_accessToken')]"
+					},
+					"existingClusterId": "[parameters('AzureDatabricks1_properties_typeProperties_existingClusterId')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/chicagolinkerservice')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "RestService",
+				"typeProperties": {
+					"url": "[parameters('chicagolinkerservice_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/crimelakelinkerservice')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('crimelakelinkerservice_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('crimelakelinkerservice_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

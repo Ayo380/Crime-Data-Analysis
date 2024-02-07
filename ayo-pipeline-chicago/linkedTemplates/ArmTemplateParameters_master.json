@@ -1,0 +1,30 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "ayo-pipeline-chicago"
+		},
+		"AzureDatabricks1_accessToken": {
+			"value": ""
+		},
+		"crimelakelinkerservice_accountKey": {
+			"value": ""
+		},
+		"AzureDatabricks1_properties_typeProperties_existingClusterId": {
+			"value": "0124-053339-wjtem31k"
+		},
+		"chicagolinkerservice_properties_typeProperties_url": {
+			"value": "https://data.cityofchicago.org/resource/ijzp-q8t2.json"
+		},
+		"crimelakelinkerservice_properties_typeProperties_url": {
+			"value": "https://crimelakegen2.dfs.core.windows.net/"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
