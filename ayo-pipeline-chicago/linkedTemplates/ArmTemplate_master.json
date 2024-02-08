@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accessToken' of 'AzureDatabricks1'"
 		},
+		"Snowflake1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Snowflake1'"
+		},
 		"crimelakelinkerservice_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'crimelakelinkerservice'"
@@ -56,6 +60,9 @@
 					},
 					"AzureDatabricks1_accessToken": {
 						"value": "[parameters('AzureDatabricks1_accessToken')]"
+					},
+					"Snowflake1_connectionString": {
+						"value": "[parameters('Snowflake1_connectionString')]"
 					},
 					"crimelakelinkerservice_accountKey": {
 						"value": "[parameters('crimelakelinkerservice_accountKey')]"

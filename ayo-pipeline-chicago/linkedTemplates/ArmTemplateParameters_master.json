@@ -8,6 +8,9 @@
 		"AzureDatabricks1_accessToken": {
 			"value": ""
 		},
+		"Snowflake1_connectionString": {
+			"value": ""
+		},
 		"crimelakelinkerservice_accountKey": {
 			"value": ""
 		},
