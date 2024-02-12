@@ -325,7 +325,7 @@
 					},
 					"activities": [
 						{
-							"name": "Get Metadata1",
+							"name": "Get filename",
 							"type": "GetMetadata",
 							"dependsOn": [],
 							"policy": {
@@ -357,6 +357,29 @@
 								"formatSettings": {
 									"type": "DelimitedTextReadSettings"
 								}
+							}
+						},
+						{
+							"name": "Execute Pipeline1",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Get filename",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Load into snowflake",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true
 							}
 						}
 					]
